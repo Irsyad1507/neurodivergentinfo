@@ -1,0 +1,23 @@
+{% extends "main/base.html" %}
+
+{% block title %}New Article{% endblock %}
+
+{% block content %}
+
+    {% if submitted %}
+
+        <h2>Your article was submitted successfully.</h2>
+
+    {% else %}
+    
+        <h1>New Article</h1>
+
+        <form class="new-item" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input class="btn btn-primary" type="submit" value="Create">
+        </form>
+
+    {% endif %}
+
+{% endblock %}
