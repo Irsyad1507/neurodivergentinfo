@@ -1,0 +1,77 @@
+{% extends "main/base.html" %}
+
+{% block title %}Update Article{% endblock %}
+
+{% block content %}
+
+    {% if submitted %}
+
+        <h2>Article updated successfully.</h2>
+
+    {% else %}
+    
+        <h1>Update Article</h1>
+
+        <!-- Traditional POST Form -->
+        <form id="updateForm" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input class="btn btn-primary" type="submit" value="Update (POST)">
+            <button type="button" class="btn btn-secondary" onclick="updateWithPUT()">Update (PUT)</button>
+        </form>
+
+        <!-- Status message for AJAX requests -->
+        <div id="statusMessage" style="margin-top: 10px;"></div>
+
+    {% endif %}
+
+    <script>
+    function updateWithPUT() {
+        // Get form data
+        const form = document.getElementById('updateForm');
+        const formData = new FormData(form);
+        
+        // Convert FormData to JSON
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            if (key !== 'csrfmiddlewaretoken') {
+                data[key] = value;
+            }
+        }
+        
+        // Get CSRF token
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        // Send PUT request
+        fetch(window.location.pathname, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const statusDiv = document.getElementById('statusMessage');
+            if (data.success) {
+                statusDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+            } else {
+                let errorMsg = 'Update failed: ';
+                if (data.errors) {
+                    errorMsg += JSON.stringify(data.errors);
+                } else {
+                    errorMsg += data.message;
+                }
+                statusDiv.innerHTML = '<div class="alert alert-danger">' + errorMsg + '</div>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('statusMessage').innerHTML = 
+                '<div class="alert alert-danger">An error occurred while updating the article.</div>';
+        });
+    }
+    </script>
+
+{% endblock %}

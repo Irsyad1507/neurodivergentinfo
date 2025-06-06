@@ -21,4 +21,6 @@ from . import views
 urlpatterns = [
     path('all/', views.all_articles, name='all_articles'),
     path('new/', views.new_article, name='new_article'),
+    path('<int:article_id>/', views.article_detail, name='article_detail'),
+    path('update/<int:article_id>/', views.update_article, name='update_article'),
 ]
