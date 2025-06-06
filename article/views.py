@@ -1,9 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article
 from .forms import ArticleForm
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.contrib import messages
 
 
 def all_articles(request):
@@ -16,6 +17,23 @@ def article_detail(request, article_id):
     article = Article.objects.get(pk=article_id)
     return render(request, 'article/article_detail.html', {
         'article': article
+    })
+
+def new_article(request):
+    submitted = False
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/article/new?submitted=True')
+    else:
+        form = ArticleForm()
+        if 'submitted' in request.GET:
+            submitted = True
+
+    return render(request, 'article/new_article.html', {
+        'form': form, 
+        'submitted': submitted
     })
 
 
@@ -71,19 +89,21 @@ def update_article_api(request, article_id):
     
     return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
 
-def new_article(request):
-    submitted = False
-    if request.method == 'POST':
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/article/new?submitted=True')
+@csrf_exempt
+def delete_article(request, article_id):
+    article = get_object_or_404(Article, pk=article_id)
+    
+    if request.method == 'DELETE':
+        # Handle AJAX DELETE request
+        article.delete()
+        return JsonResponse({'success': True, 'message': 'Article deleted successfully'})
+    elif request.method == 'POST':
+        # Handle traditional form POST request (fallback)
+        article.delete()
+        messages.success(request, ("Article Deleted"))
+        return redirect('all_articles')
     else:
-        form = ArticleForm()
-        if 'submitted' in request.GET:
-            submitted = True
-
-    return render(request, 'article/new_article.html', {
-        'form': form, 
-        'submitted': submitted
-    })
+        # Handle GET request (current implementation for backward compatibility)
+        article.delete()
+        messages.success(request, ("Article Deleted"))
+        return redirect('all_articles')
