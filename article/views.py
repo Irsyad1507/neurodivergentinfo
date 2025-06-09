@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib import messages
+from django.views.decorators.http import require_POST
 
 
 def all_articles(request):
@@ -107,3 +108,11 @@ def delete_article(request, article_id):
         article.delete()
         messages.success(request, ("Article Deleted"))
         return redirect('all_articles')
+    
+@require_POST
+def search_article(request):
+    searched = request.POST.get('searched')
+    articles = Article.objects.filter(title__contains=searched)
+    return render(request, 'article/search_article.html', 
+                  {'searched': searched, 
+                   'articles': articles})
