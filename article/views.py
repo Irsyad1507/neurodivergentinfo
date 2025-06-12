@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article
 from .forms import ArticleForm
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
 
 
 def all_articles(request):
@@ -116,3 +120,50 @@ def search_article(request):
     return render(request, 'article/search_article.html', 
                   {'searched': searched, 
                    'articles': articles})
+
+def article_text(request):
+    response = HttpResponse(content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename=articles.txt'
+    # Designate the model
+    articles = Article.objects.all()
+
+    # List comprehension of article details
+    lines = [f"{article.title}\nBy: {article.author} | {article.date_created}\n{article.content}\n\n\n" for article in articles]
+
+    # Write to text file
+    response.writelines(lines)
+    return response
+
+def article_pdf(request):
+    # Create Bytestream buffer
+    buf = io.BytesIO()
+    # Create a canvas
+    c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
+    # Create a text object
+    textob = c.beginText()
+    textob.setTextOrigin(inch, inch)
+    textob.setFont("Helvetica", 14)
+
+    # Designate The Model
+    articles = Article.objects.all()
+
+    lines = []
+
+    for article in articles:
+        lines.append(str(article.title))
+        lines.append(str(article.author))
+        lines.append(str(article.date_created))
+        lines.append(str(article.content))
+        lines.append(" ")
+
+    for line in lines:
+        textob.textLine(line)
+
+    # Finish up
+    c.drawText(textob)
+    c.showPage()
+    c.save()
+    buf.seek(0)
+
+    # Return something
+    return FileResponse(buf, as_attachment=True, filename='articles.pdf')

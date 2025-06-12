@@ -1,0 +1,17 @@
+{% extends "main/base.html" %}
+
+
+{% block title %}Changelog{% endblock %}
+
+{% block content %}
+  <div class="card">
+  <div class="card-header">
+    <!-- The date this website deployed -->
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Version 1.0</h5>
+    <p class="card-text">Initial release</p>
+    <a href="{% url 'overview' %}" class="btn btn-primary">Homepage</a>
+  </div>
+</div>
+{% endblock %}

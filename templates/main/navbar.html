@@ -24,7 +24,9 @@
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{% url 'all_articles' %}">All Articles</a></li>
               <li><a class="dropdown-item" href="{% url 'new_article' %}">New Article</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'article_text' %}">Article Text File</a></li>
+              <li><a class="dropdown-item" href="{% url 'article_pdf' %}">Article PDF File</a></li>
             </ul>
           </li>
         </ul>

@@ -25,4 +25,6 @@ urlpatterns = [
     path('update/<int:article_id>/', views.update_article, name='update_article'),
     path('delete/<int:article_id>/', views.delete_article, name='delete_article'),
     path('search/', views.search_article, name='search_article'),
+    path('text-download/', views.article_text, name='article_text'),
+    path('pdf-download/', views.article_pdf, name='article_pdf'),
 ]
