@@ -10,12 +10,21 @@ import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
+from django.core.paginator import Paginator
 
 
 def all_articles(request):
-    articles = Article.objects.all()
+    article_list = Article.objects.all()
+
+    paginator = Paginator(article_list, 5)
+    page = request.GET.get('page')
+    articles = paginator.get_page(page)
+    iterator = "o" * articles.paginator.num_pages
+
     return render(request, 'article/all_articles.html', {
-        'articles': articles
+        'article_list': article_list, 
+        'articles': articles, 
+        'iterator': iterator,
     })
 
 def article_detail(request, article_id):
