@@ -22,3 +22,7 @@ urlpatterns = [
     path('', include('main.urls')),
     path('article/', include('article.urls')),
 ]
+
+admin.site.site_header = "Neurodivergent Info Admin"
+admin.site.site_title = "Neurodivergent Info"
+admin.site.index_title = "Neurodivergent Info Database Management"
