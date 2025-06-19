@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import DetailView
 from .models import Article
 from .forms import ArticleForm
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, FileResponse
@@ -16,7 +17,7 @@ from django.core.paginator import Paginator
 def all_articles(request):
     article_list = Article.objects.all()
 
-    paginator = Paginator(article_list, 5)
+    paginator = Paginator(article_list.order_by('id'), 5)
     page = request.GET.get('page')
     articles = paginator.get_page(page)
     iterator = "o" * articles.paginator.num_pages
@@ -27,11 +28,10 @@ def all_articles(request):
         'iterator': iterator,
     })
 
-def article_detail(request, article_id):
-    article = Article.objects.get(pk=article_id)
-    return render(request, 'article/article_detail.html', {
-        'article': article
-    })
+class ArticleDetailView(DetailView):
+    model = Article
+    template_name = 'article/article_detail.html'
+
 
 def new_article(request):
     submitted = False
