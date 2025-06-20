@@ -159,16 +159,19 @@ def article_pdf(request):
     textob.setFont("Helvetica", 14)
 
     # Designate The Model
-    articles = Article.objects.all()
+    articles = Article.objects.select_related('author').all()
 
-    lines = []
+    lines = [
+        item for article in articles 
+        for item in [article.title, article.author.username, str(article.date_created), article.content, ""]
+    ]
 
-    for article in articles:
-        lines.append(str(article.title))
-        lines.append(str(article.author))
-        lines.append(str(article.date_created))
-        lines.append(str(article.content))
-        lines.append(" ")
+    # for article in articles:
+    #     lines.append(str(article.title))
+    #     lines.append(str(article.author))
+    #     lines.append(str(article.date_created))
+    #     lines.append(str(article.content))
+    #     lines.append(" ")
 
     for line in lines:
         textob.textLine(line)
