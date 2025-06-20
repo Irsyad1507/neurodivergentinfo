@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 from .models import Article
 from .forms import ArticleForm
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, FileResponse
@@ -31,6 +31,11 @@ def all_articles(request):
 class ArticleDetailView(DetailView):
     model = Article
     template_name = 'article/article_detail.html'
+
+class AddArticleView(CreateView):
+    model = Article
+    form_class = ArticleForm
+    template_name = 'article/new_article.html'
 
 
 def new_article(request):
