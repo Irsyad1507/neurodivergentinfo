@@ -1,5 +1,5 @@
 """
-URL configuration for neurodivergentinfo project.
+URL configuration for accounts app.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -14,17 +14,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
+
+from django.urls import path
+from .views import SignUpView
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('main.urls')),
-    path('article/', include('article.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/', include('accounts.urls')),
+    path('signup/', SignUpView.as_view(), name='signup'),
 ]
 
-admin.site.site_header = "Neurodivergent Info Admin"
-admin.site.site_title = "Neurodivergent Info"
-admin.site.index_title = "Neurodivergent Info Database Management"

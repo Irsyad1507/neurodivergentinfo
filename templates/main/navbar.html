@@ -11,24 +11,53 @@
       </div>
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-start flex-grow-1 pe-3">
+
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'overview' %}">Overview</a>
           </li>
+
           <li class="nav-item">
             <a class="nav-link diasbled" href="#" aria-disabled="true">Link</a>
           </li>
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Custom articles
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{% url 'all_articles' %}">All Articles</a></li>
-              <li><a class="dropdown-item" href="{% url 'new_article' %}">New Article</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{% url 'article_text' %}">Article Text File</a></li>
-              <li><a class="dropdown-item" href="{% url 'article_pdf' %}">Article PDF File</a></li>
+
+              {% if user.is_authenticated %}
+                <li><a class="dropdown-item" href="{% url 'new_article' %}">New Article</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'article_text' %}">Article Text File</a></li>
+                <li><a class="dropdown-item" href="{% url 'article_pdf' %}">Article PDF File</a></li>
+              {% endif %}
+
             </ul>
           </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Auth
+            </a>
+            <ul class="dropdown-menu">
+              {% if user.is_authenticated %}
+                <li>
+                  <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer; width: 100%; text-align: left;">Logout</button>
+                  </form>
+                </li>
+              {% else %}
+                <li><a class="dropdown-item" href="{% url 'signup' %}">Sign Up</a></li>
+                <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+              {% endif %}
+              
+
+            </ul>
+          </li>
+
         </ul>
         <form class="d-flex mt-3" role="search" method="POST" action="{% url 'search_article' %}">
           {% csrf_token %}

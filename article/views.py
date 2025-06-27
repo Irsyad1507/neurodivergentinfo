@@ -12,6 +12,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def all_articles(request):
@@ -32,30 +34,12 @@ class ArticleDetailView(DetailView):
     model = Article
     template_name = 'article/article_detail.html'
 
-class AddArticleView(CreateView):
+class AddArticleView(LoginRequiredMixin, CreateView):
     model = Article
     form_class = ArticleForm
     template_name = 'article/new_article.html'
 
-
-def new_article(request):
-    submitted = False
-    if request.method == 'POST':
-        form = ArticleForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/article/new?submitted=True')
-    else:
-        form = ArticleForm()
-        if 'submitted' in request.GET:
-            submitted = True
-
-    return render(request, 'article/new_article.html', {
-        'form': form, 
-        'submitted': submitted
-    })
-
-
+@login_required
 def update_article(request, article_id):
     article = get_object_or_404(Article, pk=article_id)
     submitted = False
@@ -135,6 +119,7 @@ def search_article(request):
                   {'searched': searched, 
                    'articles': articles})
 
+@login_required
 def article_text(request):
     response = HttpResponse(content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename=articles.txt'
@@ -148,6 +133,7 @@ def article_text(request):
     response.writelines(lines)
     return response
 
+@login_required
 def article_pdf(request):
     # Create Bytestream buffer
     buf = io.BytesIO()

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'article',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -175,3 +176,10 @@ LOGGING = {
         },
     },
 }
+
+
+# Auth URL settings
+# https://docs.djangoproject.com/en/5.2/ref/settings/#auth
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'overview'
+LOGOUT_REDIRECT_URL = 'overview'
