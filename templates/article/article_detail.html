@@ -5,7 +5,7 @@
 {% block content %}
 
 <h1>{{article.title}}</h1>
-<p>By: {{article.author}} | {{article.date_created}}</p>
+<p>By: {{article.author}} | {{article.date_created}} | {{ article.category }}</p>
 <hr>
 <p>{{article.content|safe}}</p>
 <a href="{% url 'all_articles' %}" class="btn btn-primary">Back</a>

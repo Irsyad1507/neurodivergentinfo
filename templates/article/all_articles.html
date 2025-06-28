@@ -16,6 +16,7 @@
         <tr id="article-{{ article.id }}">
 
           <td><a href="{% url 'article_detail' article.id %}">{{ article.title }}</a></td>
+          <td>{{ article.category }}</td>
 
           <td align="right">
 

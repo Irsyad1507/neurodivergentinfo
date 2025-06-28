@@ -27,4 +27,5 @@ urlpatterns = [
     path('search/', views.search_article, name='search_article'),
     path('text-download/', views.article_text, name='article_text'),
     path('pdf-download/', views.article_pdf, name='article_pdf'),
+    path('new-category/', views.AddCategoryView.as_view(), name='new_category'),
 ]

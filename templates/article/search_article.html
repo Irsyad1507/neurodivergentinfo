@@ -10,7 +10,7 @@
 
     <div class="card">
       <div class="card-header">
-          By: {{article.author}} | {{article.date_created}}
+          By: {{article.author}} | {{article.date_created}} | {{ article.category }}
       </div>
       <div class="card-body">
           <h5 class="card-title">{{article.title}}</h5>
@@ -22,7 +22,7 @@
 
   {% endfor %}
 
-  <a href="{% url 'all_articles' %}" class="btn btn-primary">All Articles</a>
+  <a href="{% url 'all_articles' %}" class="btn btn-secondary">All Articles</a>
   <br/>
 
 {% endblock %}

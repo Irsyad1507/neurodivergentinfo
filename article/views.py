@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView, CreateView
-from .models import Article
+from .models import Article, Category
 from .forms import ArticleForm
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -38,6 +38,11 @@ class AddArticleView(LoginRequiredMixin, CreateView):
     model = Article
     form_class = ArticleForm
     template_name = 'article/new_article.html'
+
+class AddCategoryView(LoginRequiredMixin, CreateView):
+    model = Category
+    template_name = 'article/new_category.html'
+    fields = '__all__'
 
 @login_required
 def update_article(request, article_id):
