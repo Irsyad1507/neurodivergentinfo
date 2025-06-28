@@ -19,7 +19,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 def all_articles(request):
     article_list = Article.objects.all()
 
-    paginator = Paginator(article_list.order_by('id'), 5)
+    paginator = Paginator(article_list.order_by('-date_created'), 5)
     page = request.GET.get('page')
     articles = paginator.get_page(page)
     iterator = "o" * articles.paginator.num_pages
