@@ -175,3 +175,9 @@ def article_pdf(request):
 
     # Return something
     return FileResponse(buf, as_attachment=True, filename='articles.pdf')
+
+def article_by_category(request, name):
+    article_by_category = Article.objects.filter(category=name)
+    return render(request, 'article/category.html', {
+        'name': name, 
+        'article_by_category': article_by_category})

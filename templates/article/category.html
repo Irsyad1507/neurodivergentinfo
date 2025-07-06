@@ -1,0 +1,37 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Posts about {{ name }}{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/article-delete.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+    {% if article_by_category %}
+
+        <h1>Posts about {{ name }}</h1>
+
+            {% for article in article_by_category %}
+                <div class="card">
+                    <div class="card-header">
+                        By: {{article.author}} | {{article.date_created}}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'article_detail' article.id %}">{{article.title}}</a></h5>
+                        <p class="card-text">{{article.content|striptags|slice:":255"}}</p>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'update_article' article.id %}" class="btn btn-primary">Update</a>
+                        <button class="btn btn-danger" onclick="deleteArticle({{ article.id }})">Delete</button>
+                        {% endif %}
+                    </div>
+                </div>
+                <br>
+            {% endfor %}
+
+    {% else %}
+    <h1>No articles under category {{ name }}</h1>
+    {% endif %}
+
+  {% endblock %}
