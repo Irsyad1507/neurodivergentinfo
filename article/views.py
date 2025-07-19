@@ -177,7 +177,7 @@ def article_pdf(request):
     return FileResponse(buf, as_attachment=True, filename='articles.pdf')
 
 def article_by_category(request, name):
-    article_by_category = Article.objects.filter(category=name)
+    article_by_category = Article.objects.filter(category=name.replace('-', ' '))
     return render(request, 'article/category.html', {
-        'name': name, 
+        'name': name.replace('-', ' '), 
         'article_by_category': article_by_category})
