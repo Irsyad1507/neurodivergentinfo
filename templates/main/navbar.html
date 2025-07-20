@@ -38,6 +38,23 @@
             </ul>
           </li>
 
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Categories
+            </a>
+            <ul class="dropdown-menu">
+
+              {% if categories %}
+                {% for category in categories %}
+                  <li><a class="dropdown-item" href="{% url 'category' category|slugify %}">{{ category }}</a></li>
+                {% endfor %}
+              {% endif %}
+
+            </ul>
+          </li>
+
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Auth
@@ -58,6 +75,7 @@
               
             </ul>
           </li>
+
 
         </ul>
         <form class="d-flex mt-3" role="search" method="POST" action="{% url 'search_article' %}">
