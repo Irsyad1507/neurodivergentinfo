@@ -9,7 +9,7 @@
 <hr>
 <p>{{article.content|safe}}</p>
 <a href="{% url 'all_articles' %}" class="btn btn-primary">Back</a>
-{% if user.is_authenticated %}
+{% if user.is_authenticated and user.id == article.author.id %}
 
     <a href="{% url 'update_article' article.id %}" class="btn btn-secondary">Update</a>
 

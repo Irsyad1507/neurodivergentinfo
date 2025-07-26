@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView, CreateView
 from .models import Article, Category
 from .forms import ArticleForm
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, FileResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, FileResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib import messages
@@ -14,6 +14,7 @@ from reportlab.lib.pagesizes import letter
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 
 def all_articles(request):
@@ -47,6 +48,12 @@ class AddCategoryView(LoginRequiredMixin, CreateView):
 @login_required
 def update_article(request, article_id):
     article = get_object_or_404(Article, pk=article_id)
+    
+    # Check if the current user is the author of the article
+    if article.author != request.user:
+        messages.error(request, "You are not authorized to edit this article.")
+        return redirect('all_articles')
+    
     submitted = False
     
     if request.method == 'POST':
@@ -84,6 +91,11 @@ def update_article_api(request, article_id):
     """API endpoint specifically for PUT requests"""
     if request.method == 'PUT':
         article = get_object_or_404(Article, pk=article_id)
+        
+        # Check if user is authenticated and is the author
+        if not request.user.is_authenticated or article.author != request.user:
+            return JsonResponse({'success': False, 'message': 'You are not authorized to edit this article.'}, status=403)
+        
         try:
             data = json.loads(request.body)
             form = ArticleForm(data, instance=article)
@@ -100,6 +112,21 @@ def update_article_api(request, article_id):
 @csrf_exempt
 def delete_article(request, article_id):
     article = get_object_or_404(Article, pk=article_id)
+    
+    # Check if user is authenticated and is the author
+    if not request.user.is_authenticated:
+        if request.method == 'DELETE':
+            return JsonResponse({'success': False, 'message': 'Authentication required.'}, status=401)
+        else:
+            messages.error(request, "You must be logged in to delete articles.")
+            return redirect('all_articles')
+    
+    if article.author != request.user:
+        if request.method == 'DELETE':
+            return JsonResponse({'success': False, 'message': 'You are not authorized to delete this article.'}, status=403)
+        else:
+            messages.error(request, "You are not authorized to delete this article.")
+            return redirect('all_articles')
     
     if request.method == 'DELETE':
         # Handle AJAX DELETE request
