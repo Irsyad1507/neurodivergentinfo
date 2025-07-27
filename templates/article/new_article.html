@@ -21,3 +21,11 @@
     {% endif %}
 
 {% endblock %}
+
+{% block extra_js %}
+<script>
+    let userId = "{{ user.id }}";
+    const box = document.getElementById("authorBox");
+    box.setAttribute("value", userId)
+</script>
+{% endblock %}

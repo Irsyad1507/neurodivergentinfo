@@ -12,6 +12,6 @@ class ArticleForm(ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
             'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Content'}),
-            'author': forms.Select(attrs={'class': 'form-select', 'placeholder': 'Author'}),
+            'author': forms.TextInput(attrs={'class': 'form-control', 'value': '', 'id': 'authorBox', 'type': 'hidden'}),
             'category': forms.Select(choices=option_list, attrs={'class': 'form-select'}),
         }
