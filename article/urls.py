@@ -29,4 +29,5 @@ urlpatterns = [
     path('pdf-download/', views.article_pdf, name='article_pdf'),
     path('category/new/', views.AddCategoryView.as_view(), name='new_category'),
     path('category/<str:name>/', views.article_by_category, name='category'),
+    path('like/<int:pk>/', views.like, name='like_article'),
 ]

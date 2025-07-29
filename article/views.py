@@ -15,6 +15,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.urls import reverse
 
 
 def all_articles(request):
@@ -34,6 +35,12 @@ def all_articles(request):
 class ArticleDetailView(DetailView):
     model = Article
     template_name = 'article/article_detail.html'
+
+    def get_context_data(self,*args, **kwargs):
+        context = super(ArticleDetailView, self).get_context_data(*args, **kwargs)
+        article = get_object_or_404(Article, id=self.kwargs['pk'])
+        context['total_likes'] = article.total_likes()
+        return context
 
 class AddArticleView(LoginRequiredMixin, CreateView):
     model = Article
@@ -208,3 +215,10 @@ def article_by_category(request, name):
     return render(request, 'article/category.html', {
         'name': name.replace('-', ' '), 
         'article_by_category': article_by_category})
+
+@require_POST
+@login_required
+def like(request, pk):
+    articles = get_object_or_404(Article, id=request.POST.get('article_id'))
+    articles.likes.add(request.user)
+    return HttpResponseRedirect(reverse('article_detail', args=[str(pk)]))
