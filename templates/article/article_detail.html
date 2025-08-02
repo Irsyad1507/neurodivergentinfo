@@ -9,12 +9,23 @@
 <hr>
 <p>{{article.content|safe}}</p>
 <br/>
+{% if user.is_authenticated %}
 <form action="{% url 'like_article' article.id %}" method="POST">
     {% csrf_token %}
-    <button type="submit" name="article_id" value="{{ article.id }}" style="background: none; border: none; padding: 0; cursor: pointer;">
-        <i class="fa-regular fa-thumbs-up fa-xl"></i>
-    </button> - {{ total_likes }} likes
-</form> 
+    {% if liked %}
+        <button type="submit" name="article_id" value="{{ article.id }}" style="background: none; border: none; padding: 0; cursor: pointer;">
+            <i class="fa-solid fa-thumbs-up fa-xl"></i>
+        </button>
+    {% else %}
+        <button type="submit" name="article_id" value="{{ article.id }}" style="background: none; border: none; padding: 0; cursor: pointer;">
+            <i class="fa-regular fa-thumbs-up fa-xl"></i>
+        </button>
+    {% endif %} - {{ total_likes }} likes
+</form>
+{% else %}
+    <p>Please <a href="{% url 'login' %}">log in</a> to like this article.</p>
+{% endif %}
+
 <br/>
 <a href="{% url 'all_articles' %}" class="btn btn-primary">Back</a>
 {% if user.is_authenticated and user.id == article.author.id %}

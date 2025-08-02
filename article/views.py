@@ -39,6 +39,10 @@ class ArticleDetailView(DetailView):
     def get_context_data(self,*args, **kwargs):
         context = super(ArticleDetailView, self).get_context_data(*args, **kwargs)
         article = get_object_or_404(Article, id=self.kwargs['pk'])
+        liked = False
+        if article.likes.filter(id=self.request.user.id).exists():
+            liked = True
+        context['liked'] = liked
         context['total_likes'] = article.total_likes()
         return context
 
@@ -220,5 +224,11 @@ def article_by_category(request, name):
 @login_required
 def like(request, pk):
     articles = get_object_or_404(Article, id=request.POST.get('article_id'))
-    articles.likes.add(request.user)
+    liked = False
+    if articles.likes.filter(id=request.user.id).exists():
+        articles.likes.remove(request.user)
+        liked = False
+    else:
+        articles.likes.add(request.user)
+        liked = True
     return HttpResponseRedirect(reverse('article_detail', args=[str(pk)]))
