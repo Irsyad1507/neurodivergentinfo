@@ -15,6 +15,7 @@
         <!-- Traditional POST Form -->
         <form id="updateForm" method="POST">
             {% csrf_token %}
+            {{ form.media }}
             {{ form.as_p }}
             <input class="btn btn-primary" type="submit" value="Update (POST)">
             <button type="button" class="btn btn-secondary" onclick="updateWithPUT()">Update (PUT)</button>

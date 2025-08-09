@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from ckeditor.fields import RichTextField
 
 class Article(models.Model):
     title = models.CharField('Title', max_length=255)
-    content = models.TextField('Content')
+    content = RichTextField(blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     category = models.CharField('Category', max_length=255, default='Uncategorised')
