@@ -9,6 +9,7 @@ class Article(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     category = models.CharField('Category', max_length=255, default='Uncategorised')
+    snippet = models.CharField('Article snippet', max_length=255)
     likes = models.ManyToManyField(User, related_name='liked_articles', blank=True)
 
     def total_likes(self):

@@ -15,7 +15,7 @@
       </div>
       <div class="card-body">
         <h5 class="card-title"><a href="{% url 'article_detail' article.id %}">{{ article.title }}</a></h5>
-        <p class="card-text">{{ article.content|slice:":255"|striptags }}...</p>
+        <p class="card-text">{{ article.snippet }}...</p>
         {% if user.is_authenticated and user.id == article.author.id %}
     
           <a href="{% url 'update_article' article.id %}" class="btn btn-primary btn-sm">Update</a>
