@@ -16,10 +16,11 @@ Including another URLconf
 """
 
 from django.urls import path
-from .views import SignUpView
+from .views import SignUpView, EditProfileView
 
 
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
+    path('edit-profile/', EditProfileView.as_view(), name='edit_profile'),
 ]
 
