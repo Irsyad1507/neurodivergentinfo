@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
-from .forms import SignUpForm, EditProfileForm
+from .forms import SignUpForm, EditProfileForm, ChangePasswordForm
+from django.contrib.auth.views import PasswordChangeView
 
 class SignUpView(generic.CreateView):
     form_class = SignUpForm
@@ -19,3 +19,6 @@ class EditProfileView(LoginRequiredMixin, generic.UpdateView):
     def get_object(self):
         return self.request.user
 
+class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
+    form_class = ChangePasswordForm
+    success_url = reverse_lazy('login')
