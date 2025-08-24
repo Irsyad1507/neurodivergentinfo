@@ -8,7 +8,7 @@ option_list = [option for option in options]
 class ArticleForm(ModelForm):
     class Meta:
         model = Article
-        fields = ('title', 'author', 'category', 'content', 'snippet')
+        fields = ('title', 'author', 'category', 'content', 'snippet', 'header_image')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
             'author': forms.TextInput(attrs={'class': 'form-control', 'value': '', 'id': 'authorBox', 'type': 'hidden'}),

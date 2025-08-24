@@ -7,6 +7,10 @@
 <h1>{{article.title}}</h1>
 <p>By: {{article.author}} | {{article.date_created}} | {{ article.category }}</p>
 <hr>
+{% if post.header_image %}
+    <img src="{{ post.header_image.url }}" alt="">
+    <br/>
+{% endif %}
 <p>{{article.content|safe}}</p>
 <br/>
 {% if user.is_authenticated %}
